@@ -18,7 +18,7 @@ api_get <- function(request, query="") {
     print_info("Getting data...", URL)
     response <- NULL
     tryCatch({
-        json <- getURL(URL)
+        json <- getURL(URL, ssl.verifypeer = FALSE)
         response <- fromJSON(json, unexpected.escape="keep")
     }, error = function(err) {
         print_error("Could not retrieve data", err)
