@@ -4,45 +4,22 @@
 ## Datata, 2016
 ##
 
-print_available_services <- function() {
-    services <- list.files("./score-data-sdk/functions/services/")
-    print_raw("\nAvailable platform services\n")
-    for (service in services) {
-        ## By convention if it starts with '_',
-        ## then it is not a service
-        if (substr(service, 1, 1) != "_") {
-            service <- gsub(".R", "", service)
-            do.call(paste(service, ".documentation", sep=""), list())
-        }
-    }
-    print_raw("\n\n")
-}
 
-
-build_request <- function(path, id=NULL, query=NULL) {
-    request <- NULL
-    if (!is.null(id)) {
-        request <- paste(path, "/", id, sep="")
-    } else {
-        request <- path
-    }
-    return(request)
-}
-
-response_to_data <- function(response) {
+response_to_dataframe <- function(response) {
     n_rows <- NULL
     response_to_unpack <- NULL
     if (!is.null(response$results)) {
         ## Various results
         column_names <- names(response$results[[1]])
         to_unpack <- lapply(response$results, null_to_na)
-        n_rows <- length(response$results)
+        n_cols <- length(response$results)
         data <- data.frame(
-            t(matrix(unlist(to_unpack), nrow=n_rows)),
+            ## Transpose is needed to unpack correctly
+            t(matrix(unlist(to_unpack), ncol=n_cols)),
             stringsAsFactors=FALSE
         )
     } else {
-        ## Single result
+        ## Single result (e.g. ID was specified)
         column_names <- names(response)
         to_unpack <- null_to_na(response)
         n_rows <- 1
@@ -55,7 +32,50 @@ response_to_data <- function(response) {
     return(data)
 }
 
+
 null_to_na <- function(x) {
     x[sapply(x, is.null)] <- NA
     return(x)
+}
+
+
+availability <- function(service=NULL) {
+    ##
+    ## Return the list of available services
+    ## or targets available within a service
+    ##
+    if (is.null(service)) {
+        return(available_services())
+    } else {
+        return(available_targets(service))
+    }
+}
+
+
+available_services <- function() {
+    available_services <- list()
+    services <- list.files("./score-data-sdk/functions/services/")
+    for (service in services) {
+        ## By convention if it starts with '_',
+        ## then it is not a service (e.g. this file)
+        if (substr(service, 1, 1) != "_") {
+            service <- gsub(".R", "", service)
+            available_services <- cbind(available_services, service)
+        }
+    }
+    return(available_services)
+}
+
+available_targets <- function(service) {
+    available_targets <- do.call(paste(service, ".targets", sep=""), list())
+    return(available_targets)
+}
+
+
+print_available_services <- function() {
+    services <- available_services()
+    for (service in services) {
+        do.call(paste(service, ".documentation", sep=""), list())
+    }
+    print_raw("\n")
 }
