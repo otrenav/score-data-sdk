@@ -4,32 +4,26 @@
 ## Datata, 2016
 ##
 
-profile <- function(target=NULL, id=NULL, query=NULL) {
-    if (is.null(target) & (!is.null(id) | !is.null(query))) {
-        print_error("Query sent without `objects` specification")
-    } else if (is.null(target)) {
+profile <- function(parameters) {
+    if (is.null(parameters$target)) {
         profile.documentation()
         print_raw('\n')
     } else {
-        do.call(paste("profile.", target, sep=""), list(id, query))
+        do.call(paste("profile.", parameters$target, sep=""), list(parameters))
     }
 }
 
 
-profile.users <- function(id=NULL, query=NULL) {
-    path <- "/accounts/users"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+profile.users <- function(parameters) {
+    parameters$path <- "/accounts/users"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-profile.clients <- function(id=NULL, query=NULL) {
-    path <- "/accounts/clients"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+profile.clients <- function(parameters) {
+    parameters$path <- "/accounts/clients"
+    data <- get_data(parameters)
     return(data)
 }
 
@@ -37,7 +31,17 @@ profile.clients <- function(id=NULL, query=NULL) {
 profile.documentation <- function () {
     print_raw("\n- Profile service")
     print_raw("\n  ---------------")
-    print_raw("\n\t profile.users([id, query]):    dataframe")
-    print_raw("\n\t profile.clients([id, query]):  dataframe")
+    print_raw("\n\t profile / users    dataframe")
+    print_raw("\n\t profile / clients  dataframe")
     print_raw("\n")
+}
+
+profile.targets <- function() {
+    ## TODO: (otrenav) sacar esto
+    ## automáticamente para no tener
+    ## que estar actualizando
+    targets <- list(
+        "users",
+        "clients"
+    )
 }

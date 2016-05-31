@@ -4,77 +4,61 @@
 ## Datata, 2016
 ##
 
-sites <- function(target=NULL, id=NULL, query=NULL) {
-    if (is.null(target) & (!is.null(id) | !is.null(query))) {
-        print_error("Query sent without `objects` specification")
-    } else if (is.null(target)) {
+sites <- function(parameters) {
+    if (is.null(parameters$target)) {
         sites.documentation()
         print_raw('\n')
     } else {
-        do.call(paste("sites.", target, sep=""), list(id, query))
+        do.call(paste("sites.", parameters$target, sep=""), list(parameters))
     }
 }
 
 
-sites.contents <- function(id=NULL, query=NULL) {
-    path <- "/sites/contents"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.contents <- function(parameters) {
+    parameters$path <- "/sites/contents"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.rows <- function(id=NULL, query=NULL) {
-    path <- "/sites/rows"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.rows <- function(parameters) {
+    parameters$path <- "/sites/rows"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.sites <- function(id=NULL, query=NULL) {
-    path <- "/sites/sites"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.sites <- function(parameters) {
+    parameters$path <- "/sites/sites"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.menus <- function(id=NULL, query=NULL) {
-    path <- "/sites/menus"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.menus <- function(parameters) {
+    parameters$path <- "/sites/menus"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.submenus <- function(id=NULL, query=NULL) {
-    path <- "/sites/submenus"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.submenus <- function(parameters) {
+    parameters$path <- "/sites/submenus"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.coordinations <- function(id=NULL, query=NULL) {
-    path <- "/sites/coordinations"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.coordinations <- function(parameters) {
+    parameters$path <- "/sites/coordinations"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-sites.panels <- function(id=NULL, query=NULL) {
-    path <- "/sites/panels"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+sites.panels <- function(parameters) {
+    parameters$path <- "/sites/panels"
+    data <- get_data(parameters)
     return(data)
 }
 
@@ -82,12 +66,27 @@ sites.panels <- function(id=NULL, query=NULL) {
 sites.documentation <- function () {
     print_raw("\n- Sites service")
     print_raw("\n  -------------")
-    print_raw("\n\t sites.contents([id, query]):       dataframe")
-    print_raw("\n\t sites.rows([id, query]):           dataframe")
-    print_raw("\n\t sites.sites([id, query]):          dataframe")
-    print_raw("\n\t sites.menus([id, query]):          dataframe")
-    print_raw("\n\t sites.submenus([id, query]):       dataframe")
-    print_raw("\n\t sites.coordinations([id, query]):  dataframe")
-    print_raw("\n\t sites.panels(id, query):           dataframe")
+    print_raw("\n\t sites / contents       dataframe")
+    print_raw("\n\t sites / rows           dataframe")
+    print_raw("\n\t sites / sites          dataframe")
+    print_raw("\n\t sites / menus          dataframe")
+    print_raw("\n\t sites / submenus       dataframe")
+    print_raw("\n\t sites / coordinations  dataframe")
+    print_raw("\n\t sites / panels         dataframe")
     print_raw("\n")
+}
+
+markdown.targets <- function() {
+    ## TODO: (otrenav) sacar esto
+    ## automáticamente para no tener
+    ## que estar actualizando
+    targets <- list(
+        "contents",
+        "rows",
+        "sites",
+        "menus",
+        "submenus",
+        "coordinations",
+        "panels"
+    )
 }

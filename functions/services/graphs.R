@@ -4,102 +4,65 @@
 ## Datata, 2016
 ##
 
-graphs <- function(target=NULL, id=NULL, query=NULL) {
-    if (is.null(target) & (!is.null(id) | !is.null(query))) {
-        print_error("Query sent without `objects` specification")
-    } else if (is.null(target)) {
+graphs <- function(parameters) {
+    if (is.null(parameters$target)) {
         graphs.documentation()
         print_raw('\n')
     } else {
-        do.call(paste("graphs.", target, sep=""), list(id, query))
+        do.call(paste("graphs.", parameters$target, sep=""), list(parameters))
     }
 }
 
 
-graphs.results_graph <- function(id, unused_argument=NULL) {
-    if (is.null(id)) {
-        print_error("Should specify an <ID>")
+graphs.results <- function(parameters) {
+    parameters$path <- "/graphs/results"
+    if (!is.null(parameters$show_graph) & parameters$show_graph == "y") {
+        show_graph_in_browser(parameters)
+    } else {
+        data <- get_data(parameters)
+        return(data)
     }
-    path <- "/graphs/results"
-    request <- paste(base_URL, path, "/", id, "/graph", sep="")
-    browseURL(request)
 }
 
 
-graphs.results <- function(id, unused_argument=NULL) {
-    if (is.null(id)) {
-        print_error("Should specify an <ID>")
-    }
-    path <- "/graphs/results"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.coordinations <- function(parameters) {
+    parameters$path <- "/graphs/coordinations"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-graphs.results_update <- function(id, unused_argument=NULL) {
-    if (is.null(id)) {
-        print_error("Should specify an <ID>")
-    }
-    path <- "/graphs/results"
-    request <- paste(path, "/", id, "/update", sep="")
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.front_end_filters <- function(parameters) {
+    parameters$path <- "/graphs/front_end_filters"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-graphs.coordinations <- function(id=NULL, query=NULL) {
-    path <- "/graphs/coordinations"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.tables <- function(parameters) {
+    parameters$path <- "/graphs/tables"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-graphs.front_end_filters <- function(id=NULL, query=NULL) {
-    path <- "/graphs/front_end_filters"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.lines <- function(parameters) {
+    parameters$path <- "/graphs/lines"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-graphs.tables <- function(id=NULL, query=NULL) {
-    path <- "/graphs/tables"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.columns <- function(parameters) {
+    parameters$path <- "/graphs/columns"
+    data <- get_data(parameters)
     return(data)
 }
 
 
-graphs.lines <- function(id=NULL, query=NULL) {
-    path <- "/graphs/lines"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
-    return(data)
-}
-
-
-graphs.columns <- function(id=NULL, query=NULL) {
-    path <- "/graphs/columns"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
-    return(data)
-}
-
-
-graphs.pies <- function(id=NULL, query=NULL) {
-    path <- "/graphs/pies"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+graphs.pies <- function(parameters) {
+    parameters$path <- "/graphs/pies"
+    data <- get_data(parameters)
     return(data)
 }
 
@@ -107,14 +70,28 @@ graphs.pies <- function(id=NULL, query=NULL) {
 graphs.documentation <- function () {
     print_raw("\n- Graphs service")
     print_raw("\n  --------------")
-    print_raw("\n\t graphs.coordinations([id, query]):      dataframe")
-    print_raw("\n\t graphs.front_end_filters([id, query]):  dataframe")
-    print_raw("\n\t graphs.tables([id, query]):             dataframe")
-    print_raw("\n\t graphs.lines([id, query]):              dataframe")
-    print_raw("\n\t graphs.columns([id, query]):            dataframe")
-    print_raw("\n\t graphs.pies([id, query]):               dataframe")
-    print_raw("\n\t graphs.results(id, query):              dataframe")
-    print_raw("\n\t graphs.results_update(id):              dataframe (updated)")
-    print_raw("\n\t graphs.results_graph(id):               graph in browser")
+    print_raw("\n\t graphs / coordinations      dataframe")
+    print_raw("\n\t graphs / front_end_filters  dataframe")
+    print_raw("\n\t graphs / tables             dataframe")
+    print_raw("\n\t graphs / lines              dataframe")
+    print_raw("\n\t graphs / columns            dataframe")
+    print_raw("\n\t graphs / pies               dataframe")
+    print_raw("\n\t graphs / results            dataframe")
+    print_raw("\n\t graphs / results_graph      graph in browser")
     print_raw("\n")
+}
+
+graphs.targets <- function() {
+    ## TODO: (otrenav) sacar esto
+    ## automáticamente para no tener
+    ## que estar actualizando
+    targets <- list(
+        "results",
+        "coordinations",
+        "front_end_filters",
+        "tables",
+        "lines",
+        "columns",
+        "pies"
+    )
 }

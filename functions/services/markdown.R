@@ -4,23 +4,19 @@
 ## Datata, 2016
 ##
 
-markdown <- function(target=NULL, id=NULL, query=NULL) {
-    if (is.null(target) & (!is.null(id) | !is.null(query))) {
-        print_error("Query sent without `objects` specification")
-    } else if (is.null(target)) {
+markdown <- function(parameters) {
+    if (is.null(parameters$target)) {
         markdown.documentation()
         print_raw('\n')
     } else {
-        do.call(paste("markdown.", target, sep=""), list(id, query))
+        do.call(paste("markdown.", parameters$target, sep=""), list(parameters))
     }
 }
 
 
-markdown.text <- function(id=NULL, query=NULL) {
-    path <- "/markdown/markdown_text"
-    request <- build_request(path, id, query)
-    response <- api_get(request)
-    data <- response_to_data(response)
+markdown.text <- function(parameters) {
+    parameters$path <- "/markdown/markdown_text"
+    data <- get_data(parameters)
     return(data)
 }
 
@@ -28,6 +24,15 @@ markdown.text <- function(id=NULL, query=NULL) {
 markdown.documentation <- function () {
     print_raw("\n- Markdown service")
     print_raw("\n  ----------------")
-    print_raw("\n\t markdown.text([id, query]):  dataframe")
+    print_raw("\n\t markdown / text  dataframe")
     print_raw("\n")
+}
+
+markdown.targets <- function() {
+    ## TODO: (otrenav) sacar esto
+    ## automáticamente para no tener
+    ## que estar actualizando
+    targets <- list(
+        "text"
+    )
 }
