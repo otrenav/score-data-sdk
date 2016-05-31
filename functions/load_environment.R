@@ -21,5 +21,7 @@ source("./score-data-sdk/functions/services/_utilities.R")
 
 ## Shared
 source("./score-data-sdk/functions/shared/prints.R")
+source("./score-data-sdk/functions/shared/get_data.R")
 source("./score-data-sdk/functions/shared/connections.R")
+source("./score-data-sdk/functions/shared/browser.R")
 source("./score-data-sdk/functions/user_functions.R")
