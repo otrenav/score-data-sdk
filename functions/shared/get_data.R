@@ -11,7 +11,7 @@ get_data <- function(parameters) {
     ##
     URL <- build_URL(parameters)
     metadata_response <- api_get(URL)
-    number_of_results <- metadata_response$count
+    number_of_results <- metadata_response$count  ## DRF specific
     if (!is.null(number_of_results)) {
         data <- get_data_multiple_results(parameters, number_of_results)
     } else {
@@ -35,7 +35,7 @@ get_data_multiple_results <- function(parameters, number_of_results) {
             override=TRUE
         )
         URL <- build_URL(parameters, loop)
-        data_dataframe <- get_data_as_dataframe(URL)
+        data_dataframe <- get_data_as_dataframe(URL, parameters)
         data <- rbind(data, data_dataframe)
     }
     return(data)
@@ -43,12 +43,12 @@ get_data_multiple_results <- function(parameters, number_of_results) {
 
 get_data_single_result <- function(parameters) {
     URL <- build_URL(parameters)
-    data <- get_data_as_dataframe(URL)
+    data <- get_data_as_dataframe(URL, parameters)
     return(data)
 }
 
-get_data_as_dataframe <- function(URL) {
+get_data_as_dataframe <- function(URL, parameters) {
     response <- api_get(URL)
-    data <- response_to_dataframe(response)
+    data <- response_to_dataframe(response, parameters)
     return(data)
 }

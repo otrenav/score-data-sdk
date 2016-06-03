@@ -31,18 +31,20 @@ build_URL <- function(parameters, loop=NULL) {
     ##
     ## NOTES:
     ## 1. `max_results` is retrieved from the configuration
-    ## 2. `page` and `limit` depend no DRF configuration
+    ## 2. `page` and `limit` depend on DRF configuration
     ##
     update <- update_string(parameters)
     URL_pre <- paste(base_URL, parameters$path, sep="")
-    ## TODO: Take into account the
-    ##`query` case for pagination
-    if (!is.null(loop)) {
-        URL_mid <- paste(update, "/?limit=", max_results, "&page=", loop, "&", sep="")
+    if (!is.null(loop) | !is.null(parameters$query)) {
+        URL_mid <- paste("/?", parameters$query, sep="")
+        if (!is.null(loop)) {
+            URL_mid <- paste(URL_mid, "&limit=", max_results, "&page=", loop, sep="")
+        }
+        URL_mid <- paste(URL_mid, "&", sep="")
     } else if (!is.null(parameters$id)) {
         URL_mid <- paste("/", parameters$id, update, "/?", sep="")
     } else {
-        URL_mid <- paste(update, "/?", sep="")
+        URL_mid <- paste("/?", sep="")
     }
     URL <- paste(URL_pre, URL_mid, format_string, sep="")
     return(URL)

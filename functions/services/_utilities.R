@@ -5,14 +5,24 @@
 ##
 
 
-response_to_dataframe <- function(response) {
+response_to_dataframe <- function(response, parameters) {
     n_rows <- NULL
     response_to_unpack <- NULL
     if (!is.null(response$results)) {
-        ## Various results
+        ## Various results: DRF Framework
         column_names <- names(response$results[[1]])
         to_unpack <- lapply(response$results, null_to_na)
         n_cols <- length(response$results)
+        data <- data.frame(
+            ## Transpose is needed to unpack correctly
+            t(matrix(unlist(to_unpack), ncol=n_cols)),
+            stringsAsFactors=FALSE
+        )
+    } else if (!is.null(parameters$query)) {
+        ## Various results: Datata API format
+        column_names <- names(response[[1]])
+        to_unpack <- lapply(response, null_to_na)
+        n_cols <- length(response)
         data <- data.frame(
             ## Transpose is needed to unpack correctly
             t(matrix(unlist(to_unpack), ncol=n_cols)),

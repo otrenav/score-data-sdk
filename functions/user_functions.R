@@ -47,50 +47,19 @@ build_parameters <- function() {
             }
         }
     } else if (query_or_target == "q") {
-        stop("Missing implementation.")
-        ## TODO: Option 1: pre-made query in platform (use ID)
-        ## TODO: Option 2: provide a query string
+        ##
+        ## TODO: Option: pre-made query in platform (use ID)
+        ##
+        ## Note: Remember to remove the "?"
+        ## from the "?&" at the beginning when
+        ## using query parameters
+        parameters$target <- "query"
+        parameters$query <- readline(prompt="Query: ")
     } else {
         print_error("Unknown option", query_or_target)
     }
     return(parameters)
 }
-
-get_service_term <- function() {
-    service <- tolower(readline(prompt="Service: "))
-    if (!(service %in% availability())) {
-        print_error("Unknown service", service)
-    }
-    return(service)
-}
-
-
-get_target_term <- function(service) {
-    target <- tolower(readline(prompt="Target: "))
-    if (!(target %in% availability(service))) {
-        print_error("Unknown target for chosen service", target)
-    }
-    return(target)
-}
-
-
-get_update_term <- function() {
-    update <- tolower(readline(prompt="Update (y/n)? "))
-    if (!(update == "y" | update == "n")) {
-        print_error("Unknown update value", update)
-    }
-    return(update)
-}
-
-
-get_show_graph_term <- function() {
-    show_graph <- tolower(readline(prompt="Show graph (y/n)? "))
-    if (!(show_graph == "y" | show_graph == "n")) {
-        print_error("Unknown show_graph value", show_graph)
-    }
-    return(show_graph)
-}
-
 
 use_wizard <- function() {
     parameters <- NULL
@@ -101,4 +70,28 @@ use_wizard <- function() {
         print_error("Unknown wizard value", wizard)
     }
     return(parameters)
+}
+
+##
+## NOTE: be careful when using this functions, as you may
+## have more than one answer per row in the `answer` column
+## for the dataframe. It may be the case when there are
+## multiple answers for a given observation.
+##
+
+remove_brackets_and_quotes <- function(data, column='answer') {
+    column_aux <- gsub('\\["', '', data[, column])
+    column_aux <- gsub('"\\]', '', column_aux)
+    data[, column] <- column_aux
+    return(data)
+}
+
+convert_to_numbers <- function(data, column='answer') {
+    column_aux <- as.numeric(data[, column])
+    data[, column] <- column_aux
+    return(data)
+}
+
+clean_numbers <- function(data, column='answer') {
+    return(convert_to_numbers(remove_brackets_and_quotes(data, column), column))
 }

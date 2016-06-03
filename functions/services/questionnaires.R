@@ -16,6 +16,11 @@ questionnaires <- function(parameters) {
     }
 }
 
+questionnaires.query <- function(parameters) {
+    parameters$path <- "/questionnaires/query"
+    data <- get_data(parameters)
+    return(data)
+}
 
 questionnaires.results <- function(parameters) {
     parameters$path <- "/questionnaires/results"
