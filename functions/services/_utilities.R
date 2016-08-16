@@ -19,6 +19,9 @@ response_to_dataframe <- function(response, parameters) {
             stringsAsFactors=FALSE
         )
     } else if (!is.null(parameters$query)) {
+        ##
+        ## TODO: (otrenav) remove this part of the SDK
+        ##
         ## Various results: Datata API format
         column_names <- names(response[[1]])
         to_unpack <- lapply(response, null_to_na)
