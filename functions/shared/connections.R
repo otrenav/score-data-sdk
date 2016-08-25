@@ -14,6 +14,7 @@ if (!require("RCurl")) {
 }
 
 api_get <- function(URL) {
+    URL <- clean_URL(URL)
     print_info("Getting data...", URL)
     response <- NULL
     tryCatch({
@@ -26,6 +27,9 @@ api_get <- function(URL) {
     return(response)
 }
 
+clean_URL <- function(URL) {
+    URL <- gsub(" ", "", URL, fixed=TRUE)
+}
 
 build_URL <- function(parameters, loop=NULL) {
     ##
