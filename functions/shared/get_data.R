@@ -17,6 +17,7 @@ get_data <- function(parameters) {
     } else {
         data <- get_data_single_result(parameters)
     }
+    data <- data[!duplicated(data), ]
     return(data)
 }
 
