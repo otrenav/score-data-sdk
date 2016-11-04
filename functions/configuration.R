@@ -9,3 +9,4 @@ base_URL      <- "https://www.score-research.com"
 format_string <- "format=json"
 status_level  <- "DEBUG"
 max_results   <- 10000
+
