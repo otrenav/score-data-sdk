@@ -4,6 +4,8 @@
 ## Datata, 2016
 ##
 
+TOKEN_STRING <- NULL
+
 if (!require("RJSONIO")) {
     install.packages("RJSONIO")
     require(RJSONIO)
@@ -17,8 +19,20 @@ api_get <- function(URL) {
     URL <- clean_URL(URL)
     print_info("Getting data...", URL)
     response <- NULL
+    if (is.null(TOKEN_STRING)) {
+        token <- authenticate()
+        TOKEN_STRING <- paste("JWT ", token, sep = "")
+    }
     tryCatch({
-        json <- getURL(URL, ssl.verifypeer = FALSE)
+        json <- getURL(
+            URL,
+            httpheader = c(
+                Accept = "application/json",
+                "Authorization" = TOKEN_STRING
+            ),
+            ssl.verifypeer = FALSE
+            ## verbose = TRUE
+        )
         response <- fromJSON(json, unexpected.escape="keep")
     }, error = function(err) {
         print_error("Could not retrieve data", err)

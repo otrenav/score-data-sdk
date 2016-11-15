@@ -8,6 +8,7 @@ setwd(PLATFORM_APIS_DIRECTORY)
 
 ## Configuration
 source("./score-data-sdk/functions/configuration.R")
+source("./score-data-sdk/functions/authentication/authentication.R")
 
 ## API Services
 source("./score-data-sdk/functions/services/graphs.R")
