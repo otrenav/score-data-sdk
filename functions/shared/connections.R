@@ -4,7 +4,7 @@
 ## Datata, 2016
 ##
 
-## TOKEN_STRING <- NULL
+TOKEN_STRING <- NULL
 
 if (!require("RJSONIO")) {
     install.packages("RJSONIO")
@@ -19,17 +19,17 @@ api_get <- function(URL) {
     URL <- clean_URL(URL)
     print_info("Getting data...", URL)
     response <- NULL
-    ## if (is.null(TOKEN_STRING)) {
-    ##     token <- authenticate()
-    ##     TOKEN_STRING <- paste("JWT ", token, sep = "")
-    ## }
+    if (is.null(TOKEN_STRING)) {
+        token <- authenticate()
+        TOKEN_STRING <- paste("JWT ", token, sep = "")
+    }
     tryCatch({
         json <- getURL(
             URL,
-            ## httpheader = c(
-            ##     Accept = "application/json",
-            ##     "Authorization" = TOKEN_STRING
-            ## ),
+            httpheader = c(
+                Accept = "application/json",
+                "Authorization" = TOKEN_STRING
+            ),
             ssl.verifypeer = FALSE
             ## verbose = TRUE
         )
@@ -37,7 +37,14 @@ api_get <- function(URL) {
     }, error = function(err) {
         print_error("Could not retrieve data", err)
     })
-    print_success("Data retrieved", URL)
+    if (response == "Signature has expired.") {
+        print("[!] Error: authentication token has expired.")
+        print("[+] Old token has been deleted. Please try again.")
+        unlink("./score-data-sdk/functions/authentication/token.csv")
+        stop("[!] Error: authentication token has expired.")
+    } else {
+        print_success("Data retrieved", URL)
+    }
     return(response)
 }
 
