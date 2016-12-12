@@ -37,7 +37,7 @@ api_get <- function(URL) {
     }, error = function(err) {
         print_error("Could not retrieve data", err)
     })
-    if (response == "Signature has expired.") {
+    if (length(response) == 1 && response == "Signature has expired.") {
         print("[!] Error: authentication token has expired.")
         print("[+] Old token has been deleted. Please try again.")
         unlink("./score-data-sdk/functions/authentication/token.csv")
