@@ -37,6 +37,20 @@ get_data_multiple_results <- function(parameters, number_of_results) {
         )
         URL <- build_URL(parameters, loop)
         data_dataframe <- get_data_as_dataframe(URL, parameters)
+
+        if (!is.null(data) && ncol(data_dataframe) > ncol(data)) {
+            ##
+            ## NOTE: This is a safeguard to avoid dataframes
+            ##       coming from the API that produce more
+            ##       columns than they should. This should
+            ##       not be kept here and the root cause
+            ##       should be fixed. To replicate the error
+            ##       comment this code and ask for all the
+            ##       records of the `answers` target from
+            ##       the `questionnaires` service.
+            ##
+            data_dataframe <- data_dataframe[, 1:ncol(data)]
+        }
         data <- rbind(data, data_dataframe)
     }
     return(data)

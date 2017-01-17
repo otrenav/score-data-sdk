@@ -13,6 +13,15 @@ response_to_dataframe <- function(response, parameters) {
         column_names <- names(response$results[[1]])
         to_unpack <- lapply(response$results, null_to_na)
         n_cols <- length(response$results)
+        ##
+        ## TODO: Warning message:
+        ## In matrix(unlist(to_unpack), ncol = n_cols) :
+        ## data length [60003] is not a sub-multiple or
+        ## multiple of the number of rows [7]
+        ##
+        ## To replicate ask for all the `answers` from
+        ## `questionnaires` and look for loop #83.
+        ##
         data <- data.frame(
             ## Transpose is needed to unpack correctly
             t(matrix(unlist(to_unpack), ncol=n_cols)),
@@ -21,6 +30,7 @@ response_to_dataframe <- function(response, parameters) {
     } else if (!is.null(parameters$query)) {
         ##
         ## TODO: (otrenav) remove this part of the SDK
+        ## NOTE: It's not currently being used.
         ##
         ## Various results: Datata API format
         column_names <- names(response[[1]])
