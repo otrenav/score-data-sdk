@@ -35,6 +35,7 @@ api_get <- function(URL) {
         )
         response <- fromJSON(json, unexpected.escape="keep")
     }, error = function(err) {
+        print(json)
         print_error("Could not retrieve data", err)
     })
     if (length(response) == 1 && response == "Signature has expired.") {
