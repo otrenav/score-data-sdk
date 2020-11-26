@@ -1,3 +1,8 @@
+
+[Delta Lab](https://links.deltalab.ai/website) | [Twitter](https://links.deltalab.ai/twitter) | [LinkedIn](https://links.deltalab.ai/linkedin)
+
+---
+
 # Score Data's R SDK
 
 This Software Development Kit (SDK) is in R. The main purpose is to extract data from Score Data's data platform. It works thorugh REST APIs for models and algorithms. It was developed by Datata during the Spring of 2016.
@@ -42,3 +47,7 @@ All (A) or ID (I)? a
 ```
 
 Should give you a dataframe `answers` that contains all the answers in the platform. As of May 2016 it contains over 500,000 observations and takes around 3min to finish extracting the data from the platform.
+
+---
+
+> "We are the people we have been waiting for."
